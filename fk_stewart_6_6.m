@@ -1,51 +1,32 @@
-close all;
-clear all;
-clc;
-
-%% This script computes the forward kinmatics of stewart platform 
+function [GuessPlatPose, ThLegLn] = fk_stewart_6_6(b,p,InLegLn)
+% function [GuessPlatPose, ThLegLn] = fk_stewart_6_6(b,p,InLegLn)
+%
+% This script computes the forward kinmatics of stewart platform 
 %   using newton raphson method for error control, screw based kinematic
 %   jacobian and inverse kinematics
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % inputs (1):
-% leg joint points for base and end effector
-% points b: base joints
-% points p: end-effector points
-% both 6x3 matrices are stacked to
-% legs = [p;b]
+%  leg joint points for base and end effector
+%  points b: base joints
+%  points p: end-effector points
+%  both 6x3 matrices are stacked to
+%  legs = [p;b]
 %
 % inputs (2):
-% measured leg lengths
-% InLegLn = [L1;L2;L3;L3;L4;L5;L6];
+%  measured leg lengths
+%  InLegLn = [L1;L2;L3;L3;L4;L5;L6];
 % outputs (1):
-% homogeneous transform from end-effector coordinate system to base
-% GuessPlatPose
+%  homogeneous transform from end-effector coordinate system to base
+%  GuessPlatPose
 % outputs (2): 
-% optional output
-% estimated leg lengths
-% ThLegLn
+%  optional output
+%  estimated leg lengths
+%  ThLegLn
     
-%% addon Nureddin: Leg joint points
-r1 = 150;
-r2 = 150;
-n1 = 12;
-n2 = 12;
-kp = [1,2,5,6,9,10];
-kb = [1,4,5,8,9,12];
-%kp = [1,4,5,8,9,12];
-%kb = [1,2,5,6,9,10];
-kp = kp-1;
-kb = kb-1;
-for k=1:6
-    p(:,k) = [r1*cos(2/n1*pi*kp(k));r1*sin(2/n1*pi*kp(k));0];
-    b(:,k) = [r2*cos(2/n2*pi*kb(k));r2*sin(2/n2*pi*kb(k));0];
-end;    
-
+%% Leg joint points
 legs = [p;b];
-%% Nureddin Addon: actual leg lengths
-InLegLn = [167.02;167.03;190.61;194.32;170.91;126];
-%% addon Nureddin: initial platform position
+%% initial platform position
 GuessPlatPose = [1,0,0,0;0,1,0,0;0,0,1,max(abs(InLegLn));0,0,0,1];
-
 %% forward kinematics calculation
 % newton raphson method 
 % guessing the pose, then computing the leglengths corresponding to the
@@ -83,13 +64,6 @@ for i = 1:100
 
     dlta = jac\error;
     GuessPlatPose = NewOri(dlta, GuessPlatPose);
-    %disp(['iteration: ',num2str(i)]);
 end
-disp(GuessPlatPose)
-disp(ThLegLn)
-
-
-
-%% eval 
-sqrt(sum(GuessPlatPose(1:3,4).^2))
-GuessPlatPose * [150;0;0;1]
+%disp(GuessPlatPose)
+%disp(ThLegLn)
