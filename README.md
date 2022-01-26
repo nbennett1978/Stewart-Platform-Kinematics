@@ -10,4 +10,10 @@ This project was forked from https://github.com/vinaym815/Stewart-Platform-Kinem
 
 The pupose of this fork is to create a function that takes the joint coordinates of base 
 frame and end-effector frame, and strut lengths as input and calculates the homogeneous transform 
-for transformation from the end-effector frame to the base frame
+for transformation from the end-effector frame to the base frame.
+
+# fk_stewart_6_6
+The function uses joint positions of the base and the end-effector in the own frames, and the strut lengths as input.
+
+# stewart_platform_sample
+This script shows the usages of fk_stewart_6_6
